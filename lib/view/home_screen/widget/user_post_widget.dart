@@ -4,18 +4,26 @@ import 'package:flutter/material.dart';
 import 'package:instagram_cloneapp/const_image/colors_constants.dart';
 
 class UserPostWidget extends StatefulWidget {
-  const UserPostWidget({super.key});
+  const UserPostWidget(
+      {super.key,
+      required this.username,
+      required this.proPic,
+      required this.location,
+      required this.postImageList,
+      this.isLiked = false,
+      this.caption});
+  final String username;
+  final String proPic;
+  final String location;
+  final List<String> postImageList;
+  final bool isLiked;
+  final String? caption;
 
   @override
   State<UserPostWidget> createState() => _UserPostWidgetState();
 }
 
 class _UserPostWidgetState extends State<UserPostWidget> {
-  List<String> postImageList = [
-    "https://images.pexels.com/photos/2775196/pexels-photo-2775196.jpeg?auto=compress&cs=tinysrgb&w=400",
-    "https://images.pexels.com/photos/910411/pexels-photo-910411.jpeg?auto=compress&cs=tinysrgb&w=400",
-    "https://images.pexels.com/photos/1955134/pexels-photo-1955134.jpeg?auto=compress&cs=tinysrgb&w=400"
-  ];
   int currentPage = 1;
   @override
   Widget build(BuildContext context) {
@@ -26,13 +34,12 @@ class _UserPostWidgetState extends State<UserPostWidget> {
           ListTile(
             leading: CircleAvatar(
               radius: 15,
-              backgroundImage: NetworkImage(
-                  "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=400"),
+              backgroundImage: NetworkImage(widget.proPic),
             ),
             title: Row(
               children: [
                 Text(
-                  "joshual_1",
+                  widget.username,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
                 ),
                 SizedBox(
@@ -60,12 +67,12 @@ class _UserPostWidgetState extends State<UserPostWidget> {
                     currentPage = value + 1;
                     setState(() {});
                   },
-                  itemCount: postImageList.length,
+                  itemCount: widget.postImageList.length,
                   itemBuilder: (context, index) => Container(
                     decoration: BoxDecoration(
                         image: DecorationImage(
                             fit: BoxFit.cover,
-                            image: NetworkImage(postImageList[index]))),
+                            image: NetworkImage(widget.postImageList[index]))),
                     child: Container(),
                   ),
                 ),
@@ -79,7 +86,7 @@ class _UserPostWidgetState extends State<UserPostWidget> {
                         borderRadius: BorderRadius.circular(15)),
                     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     child: Text(
-                      "$currentPage/${postImageList.length}",
+                      "$currentPage/${widget.postImageList.length}",
                       style: TextStyle(color: ColorConstants.primaryWhite),
                     ),
                   ))
@@ -87,59 +94,124 @@ class _UserPostWidgetState extends State<UserPostWidget> {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13.5),
-            child: Row(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   children: [
-                    Icon(
-                      Icons.favorite_border,
-                      size: 25,
+                    Row(
+                      children: [
+                        widget.isLiked == true
+                            ? Icon(
+                                Icons.favorite_rounded,
+                                size: 25,
+                                color: ColorConstants.normalRed,
+                              )
+                            : Icon(Icons.favorite_border_rounded, size: 25),
+                        SizedBox(
+                          width: 16,
+                        ),
+                        Icon(
+                          Icons.maps_ugc_rounded,
+                          size: 25,
+                        ),
+                        SizedBox(
+                          width: 16,
+                        ),
+                        Icon(
+                          Icons.send,
+                          size: 25,
+                        ),
+                        SizedBox(
+                          width: 16,
+                        )
+                      ],
                     ),
+                    Expanded(
+                        child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(
+                        widget.postImageList.length,
+                        (index) => Padding(
+                          padding: EdgeInsets.only(left: 4),
+                          child: CircleAvatar(
+                            backgroundColor: (index == currentPage - 1)
+                                ? ColorConstants.primaryBlue
+                                : null,
+                            radius: (index == currentPage - 1) ? 5 : 3,
+                          ),
+                        ),
+                      ),
+                    )),
                     SizedBox(
-                      width: 16,
+                      width: 50,
                     ),
                     Icon(
-                      Icons.maps_ugc_rounded,
+                      Icons.bookmark_border,
                       size: 25,
-                    ),
-                    SizedBox(
-                      width: 16,
-                    ),
-                    Icon(
-                      Icons.send,
-                      size: 25,
-                    ),
-                    SizedBox(
-                      width: 16,
                     )
                   ],
                 ),
-                Expanded(
-                    child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(
-                    postImageList.length,
-                    (index) => Padding(
-                      padding: EdgeInsets.only(left: 4),
-                      child: CircleAvatar(
-                        backgroundColor: (index == currentPage - 1)
-                            ? ColorConstants.primaryBlue
-                            : null,
-                        radius: (index == currentPage - 1) ? 5 : 3,
-                      ),
-                    ),
-                  ),
-                )),
                 SizedBox(
-                  width: 50,
+                  height: 13.5,
                 ),
-                Icon(
-                  Icons.bookmark_border,
-                  size: 25,
+                Row(
+                  children: [
+                    CircleAvatar(
+                      backgroundImage: NetworkImage(widget.proPic),
+                      radius: 10,
+                    ),
+                    SizedBox(width: 16),
+                    RichText(
+                        text: TextSpan(
+                            text: "Liked by",
+                            style:
+                                TextStyle(color: ColorConstants.primaryBlack),
+                            children: [
+                          TextSpan(
+                            text: widget.username,
+                            style: TextStyle(
+                                color: ColorConstants.primaryBlack,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          TextSpan(text: " and"),
+                          TextSpan(
+                              text: " 56,789 others",
+                              style: TextStyle(
+                                  color: ColorConstants.primaryBlack,
+                                  fontWeight: FontWeight.bold))
+                        ]))
+                  ],
+                ),
+                SizedBox(height: 13.5),
+                RichText(
+                  textAlign: TextAlign.start,
+                  text: TextSpan(
+                      text: widget.username,
+                      style: TextStyle(
+                          color: ColorConstants.primaryBlack,
+                          fontWeight: FontWeight.bold),
+                      children: [
+                        TextSpan(
+                            text: "${widget.caption}" ?? "",
+                            style: TextStyle(
+                                color: ColorConstants.primaryBlack,
+                                fontWeight: FontWeight.normal))
+                      ]),
+                ),
+                SizedBox(
+                  height: 13.5,
+                ),
+                Text(
+                  "September 18 ",
+                  style: TextStyle(
+                      color: ColorConstants.primaryBlack.withOpacity(.5),
+                      fontSize: 11,
+                      fontWeight: FontWeight.normal),
                 )
               ],
             ),
-          )
+          ),
         ],
       ),
     );

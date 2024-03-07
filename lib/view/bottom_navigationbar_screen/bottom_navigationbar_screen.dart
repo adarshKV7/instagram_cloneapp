@@ -3,8 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:instagram_cloneapp/const_image/colors_constants.dart';
 import 'package:instagram_cloneapp/const_image/image_constants.dart';
+import 'package:instagram_cloneapp/view/add_post_screen/add_post_screen.dart';
 import 'package:instagram_cloneapp/view/home_screen/home_screen.dart';
-import 'package:instagram_cloneapp/view/login_screen/login_screen.dart';
+import 'package:instagram_cloneapp/view/profile_screen/profile_screen.dart';
+import 'package:instagram_cloneapp/view/search_screen/search_screen.dart';
+
 import 'package:instagram_cloneapp/view/select_account_screen/select_account_scree.dart';
 
 class BottomNavigationBarScreen extends StatefulWidget {
@@ -18,18 +21,14 @@ class BottomNavigationBarScreen extends StatefulWidget {
 class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
   List<Widget> screesList = [
     HomeScreen(),
-    Container(
-      color: Colors.yellow,
-    ),
+    SearchScreen(),
     Container(
       color: Colors.white,
     ),
     Container(
       color: Colors.blue,
     ),
-    Container(
-      color: Colors.green,
-    ),
+    ProfileScreen(),
   ];
 
   int selectedIndex = 0;
@@ -46,7 +45,7 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => LoginScreen(),
+                  builder: (context) => AddPostScreen(),
                 ));
           }
         },

@@ -24,24 +24,36 @@ class HomeScreen extends StatelessWidget {
           IconButton(onPressed: () {}, icon: Icon(Icons.ios_share_rounded))
         ],
       ),
-      body: Column(
-        children: [
-          SizedBox(
-              height: 160,
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: List.generate(
-                    DummyDb.storyList.length,
-                    (index) => CustomStoryAvatar(
-                        proPic: DummyDb.storyList[index]["proPic"],
-                        isLIve: DummyDb.storyList[index]["isLive"],
-                        userName: DummyDb.storyList[index]["userName"]),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            SizedBox(
+                height: 160,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: List.generate(
+                      DummyDb.storyList.length,
+                      (index) => CustomStoryAvatar(
+                          proPic: DummyDb.storyList[index]["proPic"],
+                          isLive: DummyDb.storyList[index]["isLive"],
+                          userName: DummyDb.storyList[index]["userName"]),
+                    ),
                   ),
-                ),
-              )),
-          UserPostWidget()
-        ],
+                )),
+            ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: DummyDb.postList.length,
+                itemBuilder: (context, index) => UserPostWidget(
+                    username: DummyDb.postList[index]["userName"].toString(),
+                    proPic: DummyDb.postList[index]["proPic"].toString(),
+                    postImageList: DummyDb.postList[index]["posts"],
+                    location: DummyDb.postList[index]["location"].toString(),
+                    isLiked: DummyDb.postList[index]["isLiked"],
+                    caption: DummyDb.postList[index]["caption"]))
+          ],
+        ),
       ),
     );
   }
